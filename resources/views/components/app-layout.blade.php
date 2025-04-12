@@ -19,7 +19,7 @@
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="#!">Start Bootstrap</a>
+            <a class="navbar-brand" href="#!">My Store</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -80,7 +80,7 @@
     <!-- Footer-->
     <footer class="py-5 bg-dark">
         <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p>
+            <p class="m-0 text-center text-white">Copyright &copy; Your Website 2025</p>
         </div>
     </footer>
     <!-- Bootstrap core JS-->

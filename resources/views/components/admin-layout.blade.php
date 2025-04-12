@@ -58,18 +58,15 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
-                </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
-                    </div>
-                </div>
+                <a class="nav-link" href="{{route('products.index')}}">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Product</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('categories.index')}}">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Category</span></a>
             </li>
 
             <!-- Nav Item - Utilities Collapse Menu -->
@@ -372,7 +369,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+                        <span>Copyright &copy; Your Website 2025</span>
                     </div>
                 </div>
             </footer>
