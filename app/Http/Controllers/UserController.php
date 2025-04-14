@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -9,7 +10,8 @@ class UserController extends Controller
 
     public function home()
     {
-        return view('home');
+        $products = Product::paginate(20);
+        return view('home', ['products' => $products]);
     }
 
     function list()

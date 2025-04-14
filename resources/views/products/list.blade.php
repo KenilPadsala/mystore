@@ -36,7 +36,7 @@
          <tbody>
             @foreach ($products as $key => $product)
             <tr>
-               <th scope="row">{{$key + 1}}</th>
+               <th scope="row">{{$page*$products->count()-$products->count()+$key+1}}</th>
                <td>{{$product->name}}</td>
                <td><img src="{{ asset('storage/' . $product->image) }}" alt="" width="100" height="100"></td>
                <td>{{$product->price}}</td>
@@ -57,6 +57,13 @@
          @endforeach
 
          </tbody>
+
+
+         
       </table>
+      <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="{{ $products->previousPageUrl() }}">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="{{ $products->nextPageUrl() }}">Next</a></li>
+         </ul>
    </div>
 </x-admin-layout>

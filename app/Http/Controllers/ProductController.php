@@ -11,10 +11,10 @@ class productController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = product::all();
-        return view('products.list', ["products" => $products]);
+        $products = product::paginate(10);
+        return view('products.list', ["products" => $products, 'page' => $request->page ?? 1]);
     }
 
     /**
@@ -31,11 +31,11 @@ class productController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:10',
+            'name' => 'required|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20000',
-            'price' => 'required|string|max:10',
-            'description' => 'required|string|max:10',
-            'stock' => 'required|string|max:10',
+            'price' => 'required|string|max:100',
+            'description' => 'required|string|max:100',
+            'stock' => 'required|string|max:100',
         ]);
 
         $product = new product();
@@ -82,11 +82,11 @@ class productController extends Controller
     {
 
         $request->validate([
-            'name' => 'required|string|max:10',
+            'name' => 'required|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000',
-            'price' => 'required|string|max:20',
-            'description' => 'required|string|max:10',
-            'stock' => 'required|string|max:10',
+            'price' => 'required|string|max:200',
+            'description' => 'required|string|max:100',
+            'stock' => 'required|string|max:100',
             ]);
 
         $product = product::find($id);
