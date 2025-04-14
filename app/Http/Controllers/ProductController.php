@@ -32,7 +32,7 @@ class productController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:10',
-            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20000',
             'price' => 'required|string|max:10',
             'description' => 'required|string|max:10',
             'stock' => 'required|string|max:10',
@@ -40,10 +40,11 @@ class productController extends Controller
 
         $product = new product();
         $product->name = $request->name;
-        // if ($request->hasFile('image')) {
-        //     $imagePath = $request->file('image')->store('products', 'public');
-        //     $product->image = $imagePath;
-        // }
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+            $product->image = $imagePath;
+        }
 
         $product->price = $request->price;
         $product->description = $request->description;
@@ -82,7 +83,7 @@ class productController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:10',
-            // 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000',
             'price' => 'required|string|max:20',
             'description' => 'required|string|max:10',
             'stock' => 'required|string|max:10',
@@ -92,17 +93,17 @@ class productController extends Controller
 
         $product->name = $request->name;
 
-        // if ($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
 
-        //     if ($product->image) {
-        //         if (Storage::disk('public')->exists($product->image)) {
-        //             Storage::disk('public')->delete($product->image);
-        //         }
-        //     }
-        //     $imagePath = $request->file('image')->store('products', 'public');
-        //     $product->image = $imagePath;
+            if ($product->image) {
+                if (Storage::disk('public')->exists($product->image)) {
+                    Storage::disk('public')->delete($product->image);
+                }
+            }
+            $imagePath = $request->file('image')->store('products', 'public');
+            $product->image = $imagePath;
 
-        // }
+        }
 
         $product->price = $request->price;
         $product->description = $request->description;  
@@ -122,11 +123,11 @@ class productController extends Controller
     {
         $product = product::find($id);
 
-        // if ($product->image) {
-        //     if (Storage::disk('public')->exists($product->image)) {
-        //         Storage::disk('public')->delete($product->image);
-        //     }
-        // }
+        if ($product->image) {
+            if (Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
+            }
+        }
 
         $product->delete();
 

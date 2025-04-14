@@ -4,12 +4,14 @@
       <h1 class="h3 mb-0 text-gray-800">
          Products
       </h1>
-      <a href="{{ route('products.create') }}"` class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"> Add New product</a>
+      <a href="{{ route('products.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+         Add New product
+      </a>
 
    </div>
 
    <div class="container">
-     
+
 
       @if (session('success'))
         <div class="alert alert-success">
@@ -22,7 +24,7 @@
             <tr>
                <th scope="col">ID</th>
                <th scope="col">Name</th>
-               <!-- <th scope="col">Image</th> -->
+               <th scope="col">Image</th>
                <th scope="col">Price</th>
                <th scope="col">Description</th>
                <th scope="col">Stock</th>
@@ -36,7 +38,7 @@
             <tr>
                <th scope="row">{{$key + 1}}</th>
                <td>{{$product->name}}</td>
-               <!--  <td><img src="{{ asset('storage/' . $product->image) }}" alt="" width="100" height="100"></td> -->
+               <td><img src="{{ asset('storage/' . $product->image) }}" alt="" width="100" height="100"></td>
                <td>{{$product->price}}</td>
                <td>{{$product->description}}Kg</td>
                <td>{{$product->stock}}Kgs</td>

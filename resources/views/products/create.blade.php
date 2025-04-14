@@ -25,10 +25,10 @@
                         <input type="text" name="name" class="form-control" id="name" placeholder="Enter Product Name">
                     </div>
 
-                    <!-- <div class="form-group mb-2">
+                    <div class="form-group mb-2">
                         <label for="image">Product Image</label>
                         <input type="file" name="image" class="form-control" id="image" accept="image/*">
-                    </div> -->
+                    </div>
 
                     <div class="form-group mb-2">
                         <label for="price">Product Price</label>

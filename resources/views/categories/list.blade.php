@@ -1,12 +1,16 @@
 <x-admin-layout>
 
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">
+      Categories
+    </h1>
+    <a href="{{ route('categories.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+      Add New Category
+    </a>
+
+  </div>
+
   <div class="container">
-    <div class="row my-3">
-      <div class="col-md-4">
-        <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" href="{{ route('categories.create') }}">
-          Add New Category</a>
-      </div>
-    </div>
 
     @if (session('success'))
     <div class="alert alert-success">
