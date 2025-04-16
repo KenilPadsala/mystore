@@ -7,12 +7,12 @@
     @endif
 
     <section class="py-5">
-        <div class="container px-4 px-lg-5 mt-5">
-            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        <div class="container px-4 mt-5">
+            <div class="row gx-4 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                 
                 @foreach ($products as $product)  
                 <div class="col-md-12 mb-5">
-                    <div class="card h-100 w-100">
+                    <div class="card h-100 w-100" style="box-shadow: 0 3px 20px rgba(0,0,0,.102); ">
                         <!-- Product image-->
                         <img class="card-img-top" name="image" src="{{ asset('storage/' . $product->image) }}" alt=""></td>
                         <!-- Product details-->
@@ -39,7 +39,7 @@
                         </div>
                         <!-- Product actions-->
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" name="description" href="#">View options</a>
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" style="box-shadow: 0 3px 20px rgba(0,0,0,.133);" name="description" href="#">ADD TO CART </a>
                             </div>
                         </div>
                     </div>

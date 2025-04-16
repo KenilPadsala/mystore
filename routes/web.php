@@ -9,18 +9,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [UserController::class, 'home'])->name('home');
 
-Route::get("list/products", function (){
-    return view('products.list');
-})->name('list.products');
-
-Route::get("add/products", function (){
-    return view('products.add');
-})->name('add.products');
-
-Route::get("update/products", function (){
-    return view('products.update');
-})->name('update.products');
-
 Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function () {
     Route::resource('products', ProductController::class); //resource
     Route::resource('categories', CategoryController::class); //resource
@@ -29,9 +17,7 @@ Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function 
 
 Route::middleware(['auth', 'checkRole:user'])->group(function () {
 
-    Route::get("home", function () {
-        return view("home");
-    })->name('home')->middleware('auth');
+    Route::get("home", [UserController::class, 'home'])->name('home')->middleware('auth');
     
 });
 
