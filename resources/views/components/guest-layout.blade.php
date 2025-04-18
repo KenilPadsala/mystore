@@ -34,9 +34,15 @@
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
-                            {{ $slot }}
+                        {{ $slot }}
                     </div>
                 </div>
+
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="{{ $products->previousPageUrl() }}">Previous</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="{{ $products->nextPageUrl() }}">Next</a></li>
+                </ul>
 
             </div>
 
