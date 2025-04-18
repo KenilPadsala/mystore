@@ -23,6 +23,7 @@
         <tr>
           <th scope="col">ID</th>
           <th scope="col">Name</th>
+          <th scope="col">Number of Products</th>
           <th scope="col">Created Date</th>
           <th scope="col">Updated Date</th>
           <th scope="col">Action</th>
@@ -33,6 +34,7 @@
       <tr>
         <th scope="row">{{$key + 1}}</th>
         <td>{{$category->name}}</td>
+        <td>{{$category->products->count()}}</td>
         <td>{{ $category->created_at }}</td>
         <td>{{ $category->updated_at }}</td>
         <td class="d-flex">

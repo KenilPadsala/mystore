@@ -2,7 +2,7 @@
 
    <div class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800">
-         Products
+         Products (Total Products {{$total}})
       </h1>
       <a href="{{ route('products.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
          Add New product
@@ -12,18 +12,18 @@
 
    <div class="container">
 
-
       @if (session('success'))
         <div class="alert alert-success">
           {{ session('success') }}
         </div>
-     @endif
+      @endif
 
       <table class="table">
          <thead>
             <tr>
                <th scope="col">ID</th>
                <th scope="col">Name</th>
+               <th scope="col">Category</th>
                <th scope="col">Image</th>
                <th scope="col">Price</th>
                <th scope="col">Description</th>
@@ -36,8 +36,9 @@
          <tbody>
             @foreach ($products as $key => $product)
             <tr>
-               <th scope="row">{{$page*$products->count()-$products->count()+$key+1}}</th>
+               <th scope="row">{{$page * $products->count() - $products->count() + $key + 1}}</th>
                <td>{{$product->name}}</td>
+               <td>{{$product->category->name ?? '-'}}</td>
                <td><img src="{{ asset('storage/' . $product->image) }}" alt="" width="100" height="100"></td>
                <td>{{$product->price}}</td>
                <td>{{$product->description}}Kg</td>
@@ -59,11 +60,11 @@
          </tbody>
 
 
-         
+
       </table>
       <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="{{ $products->previousPageUrl() }}">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="{{ $products->nextPageUrl() }}">Next</a></li>
-         </ul>
+         <li class="page-item"><a class="page-link" href="{{ $products->previousPageUrl() }}">Previous</a></li>
+         <li class="page-item"><a class="page-link" href="{{ $products->nextPageUrl() }}">Next</a></li>
+      </ul>
    </div>
 </x-admin-layout>

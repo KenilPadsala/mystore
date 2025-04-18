@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\product;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class productController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $products = product::paginate(10);
-        return view('products.list', ["products" => $products, 'page' => $request->page ?? 1]);
+        $products = Product::orderByDesc('id')->paginate(10);  
+        $total = Product::count();
+        return view('products.list', ["products" => $products, 'total' => $total, 'page' => $request->page ?? 1]);
     }
 
     /**
@@ -22,7 +24,8 @@ class productController extends Controller
      */
     public function create()
     {
-        return view('products.create');
+        $categories = Category::all();
+        return view('products.create', ['categories' => $categories]);
     }
 
     /**
@@ -32,13 +35,14 @@ class productController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:100',
+            'category' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20000',
             'price' => 'required|string|max:100',
             'description' => 'required|string|max:100',
             'stock' => 'required|string|max:100',
         ]);
 
-        $product = new product();
+        $product = new Product();
         $product->name = $request->name;
 
         if ($request->hasFile('image')) {
@@ -49,6 +53,7 @@ class productController extends Controller
         $product->price = $request->price;
         $product->description = $request->description;
         $product->stock = $request->stock;
+        $product->category_id = $request->category;
 
         $product->save();
 

@@ -24,6 +24,15 @@
                         <label for="name">Product Name</label>
                         <input type="text" name="name" class="form-control" id="name" placeholder="Enter Product Name">
                     </div>
+                    <div class="form-group mb-2">
+                        <label for="name">Select Category</label>
+                        <select name="category" class="form-control" id="category_id">
+                            <option value=""></option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     <div class="form-group mb-2">
                         <label for="image">Product Image</label>

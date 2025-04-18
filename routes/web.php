@@ -4,10 +4,12 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;   
 
 Route::get('/', [UserController::class, 'home'])->name('home');
+Route::get('/test', TestController::class);
 
 Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function () {
     Route::resource('products', ProductController::class); //resource
@@ -17,7 +19,7 @@ Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function 
 
 Route::middleware(['auth', 'checkRole:user'])->group(function () {
 
-    Route::get("home", [UserController::class, 'home'])->name('home')->middleware('auth');
+    // Route::get("home", [UserController::class, 'home'])->name('home')->middleware('auth');
     
 });
 
