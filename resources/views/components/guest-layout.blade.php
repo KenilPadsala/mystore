@@ -38,11 +38,7 @@
                     </div>
                 </div>
 
-                <ul class="pagination">
-                    <li class="page-item"><a class="page-link" href="{{ $products->previousPageUrl() }}">Previous</a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="{{ $products->nextPageUrl() }}">Next</a></li>
-                </ul>
+               
 
             </div>
 

@@ -26,7 +26,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string',
         ]);
 
         if (Auth::attempt($request->only('email', 'password'))) {
@@ -37,7 +37,7 @@ class AuthController extends Controller
             }
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials.']);
+        return back()->withErrors(['email' => 'Invalid Credentials.']);
     }
 
     public function showRegisterForm()

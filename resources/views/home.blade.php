@@ -70,9 +70,15 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto"
-                                        style="box-shadow: 0 3px 20px rgba(0,0,0,.133);" name="description" href="#">ADD TO
+                                <div class="text-center">
+                                    @if($product->stock > 0)
+                                    <a class="btn btn-outline-dark mt-auto"
+                                        style="box-shadow: 0 3px 20px rgba(0,0,0,.133); transition: all .4s ease-in-out; transform: perspective(1000px);" name="description" href="#">ADD TO
                                         CART </a>
+                                        @else
+                                        <a class="btn btn-outline-dark mt-auto"
+                                        style="box-shadow: 0 3px 20px rgba(0,0,0,.133); transition: all .4s ease-in-out; transform: perspective(1000px);"  href="#"> Out Of Stock </a>
+                                        @endif
                                 </div>
                             </div>
                         </div>

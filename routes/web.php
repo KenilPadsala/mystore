@@ -15,11 +15,11 @@ Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function 
     Route::resource('products', ProductController::class); //resource
     Route::resource('categories', CategoryController::class); //resource
     Route::get('dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-}); 
+});
 
 Route::middleware(['auth', 'checkRole:user'])->group(function () {
 
-    // Route::get("home", [UserController::class, 'home'])->name('home')->middleware('auth');
+    Route::get("home", [UserController::class, 'home'])->name('home')->middleware('auth');
     
 });
 
