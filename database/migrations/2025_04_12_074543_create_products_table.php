@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('image')->after('name')->nullable();
             $table->float('price');
             $table->text('description')->nullable();
             $table->integer('stock')->default(0);
@@ -28,7 +27,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('image');
+            Schema::dropIfExists('products');
 
         });
     }
