@@ -11,6 +11,7 @@ class UserController extends Controller
 
     public function home(Request $request)
     {
+        
         $category = $request->input('category');
 
         if($category) {

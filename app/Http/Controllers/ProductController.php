@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -16,15 +17,37 @@ class ProductController extends Controller
     {
         $products = Product::orderByDesc('id')->paginate(10);  
         $total = Product::count();
-        return view('products.list', ["products" => $products, 'total' => $total, 'page' => $request->page ?? 1]);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Product list retrieved successfully',
+                'data' => $products
+            ]);
+        }
+
+        return view('products.list', [
+            "products" => $products,
+            'total' => $total,
+            'page' => $request->page ?? 1
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $categories = Category::all();
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Form data loaded',
+                'data' => $categories
+            ]);
+        }
+
         return view('products.create', ['categories' => $categories]);
     }
 
@@ -33,7 +56,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
             'category' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20000',
@@ -41,6 +64,17 @@ class ProductController extends Controller
             'description' => 'required|string|max:100',
             'stock' => 'required|string|max:100',
         ]);
+
+        if ($validator->fails()) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first(),
+                    'data' => []
+                ], 422);
+            }
+            return back()->withErrors($validator)->withInput();
+        }
 
         $product = new Product();
         $product->name = $request->name;
@@ -54,30 +88,73 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->stock = $request->stock;
         $product->category_id = $request->category;
-
         $product->save();
 
-        return redirect()->route('products.index')->with('success', 'Product Added Successfully.');
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Product created successfully',
+                'data' => $product
+            ]);
+        }
 
+        return redirect()->route('products.index')->with('success', 'Product Added Successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
-        //
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Product not found',
+                'data' => []
+            ], 404);
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Product retrieved successfully',
+                'data' => $product
+            ]);
+        }
+
+        return redirect()->route('products.index')->with('error', 'Product not found.');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request, string $id)
     {
+        $product = Product::find($id);
 
-        $product = product::find($id);
+        if (!$product) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Product not found',
+                    'data' => []
+                ], 404);
+            }
+
+            return redirect()->route('products.index')->with('error', 'Product not found.');
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Edit data loaded',
+                'data' => $product
+            ]);
+        }
+
         return view('products.edit', ['product' => $product]);
-
     }
 
     /**
@@ -85,56 +162,97 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000',
             'price' => 'required|string|max:200',
             'description' => 'required|string|max:100',
             'stock' => 'required|string|max:100',
-            ]);
+        ]);
 
-        $product = product::find($id);
+        if ($validator->fails()) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()->first(),
+                    'data' => []
+                ], 422);
+            }
+
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $product = Product::find($id);
+        if (!$product) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Product not found',
+                    'data' => []
+                ], 404);
+            }
+
+            return redirect()->route('products.index')->with('error', 'Product not found.');
+        }
 
         $product->name = $request->name;
 
         if ($request->hasFile('image')) {
-
-            if ($product->image) {
-                if (Storage::disk('public')->exists($product->image)) {
-                    Storage::disk('public')->delete($product->image);
-                }
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
             }
             $imagePath = $request->file('image')->store('products', 'public');
             $product->image = $imagePath;
-
         }
 
         $product->price = $request->price;
-        $product->description = $request->description;  
+        $product->description = $request->description;
         $product->stock = $request->stock;
-
         $product->save();
 
-        return redirect()->route('products.index')->with('success', 'Product updated Successfully.');
-        ;
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Product updated successfully',
+                'data' => $product
+            ]);
+        }
 
+        return redirect()->route('products.index')->with('success', 'Product updated Successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        $product = product::find($id);
+        $product = Product::find($id);
 
-        if ($product->image) {
-            if (Storage::disk('public')->exists($product->image)) {
-                Storage::disk('public')->delete($product->image);
+        if (!$product) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Product not found',
+                    'data' => []
+                ], 404);
             }
+
+            return redirect()->route('products.index')->with('error', 'Product not found.');
+        }
+
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
         }
 
         $product->delete();
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Product deleted successfully',
+                'data' => []
+            ]);
+        }
 
         return redirect()->route('products.index')->with('success', 'Product deleted Successfully.');
     }
