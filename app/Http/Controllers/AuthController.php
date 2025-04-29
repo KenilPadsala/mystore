@@ -21,25 +21,46 @@ class AuthController extends Controller
 
         return view('auth.login');
     }
-
     public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
-
-        if (Auth::attempt($request->only('email', 'password'))) {
-            if(auth()->user()->role == 'admin'){
-                return redirect()->route('admin.dashboard')->with('success', 'Logged in successfully.');
-            } else {
-                return redirect()->route('home')->with('success', 'Logged in successfully.');
+    
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Invalid credentials.',
+                ], 401);
             }
+    
+            return back()->withErrors(['email' => 'Invalid Credentials.']);
         }
-
-        return back()->withErrors(['email' => 'Invalid Credentials.']);
+    
+        $user = Auth::user();
+    
+        if ($request->wantsJson()) {
+            $token = $user->createToken('auth_token')->plainTextToken;
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'Logged in successfully.',
+                'data' => [
+                    'token' => $token,
+                    'user' => $user,
+                ],
+            ]);
+        }
+    
+        // Normal web redirect
+        $redirect = $user->role === 'admin' ? route('admin.dashboard') : route('home');
+    
+        return redirect()->to($redirect)->with('success', 'Logged in successfully.');
     }
-
+    
+    
     public function showRegisterForm()
     {
 
