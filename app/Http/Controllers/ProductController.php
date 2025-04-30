@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -162,6 +163,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        Log::channel('product')->info('Update request received', ['request' => $request->all()]);   
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000',
@@ -170,7 +172,10 @@ class ProductController extends Controller
             'stock' => 'required|string|max:100',
         ]);
 
+
         if ($validator->fails()) {
+
+            Log::channel('product')->info("Validation failed ");
             if ($request->wantsJson()) {
                 return response()->json([
                     'status' => false,
@@ -182,8 +187,11 @@ class ProductController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
+        Log::channel('product')->info("Validation Passed ");
+
         $product = Product::find($id);
         if (!$product) {
+            
             if ($request->wantsJson()) {
                 return response()->json([
                     'status' => false,
@@ -210,6 +218,9 @@ class ProductController extends Controller
         $product->stock = $request->stock;
         $product->save();
 
+        Log::channel('product')->info("Product  update thay gai che  ");
+
+
         if ($request->wantsJson()) {
             return response()->json([
                 'status' => true,
@@ -217,6 +228,8 @@ class ProductController extends Controller
                 'data' => $product
             ]);
         }
+
+        Log::channel('product')->info("Products na page ma redirect karyu",);
 
         return redirect()->route('products.index')->with('success', 'Product updated Successfully.');
     }

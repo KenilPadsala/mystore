@@ -44,7 +44,7 @@
                     <div class="col-md-12 mb-5">
                         <div class="card h-100 w-100" style="box-shadow: 0 3px 20px rgba(0,0,0,.102); ">
                             <!-- Product image-->
-                            <img class="card-img-top" name="image" src="{{ asset('storage/' . $product->image) }}" alt="">
+                            <img class="card-img-top" name="image" src="{{ $product->image_url }}" alt="">
                             </td>
                             <!-- Product details-->
                             <div class="card-body p-4">
@@ -83,11 +83,16 @@
                             </div>
                         </div>
                     </div>
+                   
                 @endforeach
                 <ul class="pagination">
+                    @if($products->currentPage() > 1)
                     <li class="page-item"><a class="page-link" href="{{ $products->previousPageUrl() }}">Previous</a>
                     </li>
+                    @endif 
+                    @if($products->hasMorePages())
                     <li class="page-item"><a class="page-link" href="{{ $products->nextPageUrl() }}">Next</a></li>
+                    @endif
                 </ul>
             </div>
         </div>

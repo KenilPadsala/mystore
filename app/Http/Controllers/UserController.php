@@ -15,9 +15,9 @@ class UserController extends Controller
         $category = $request->input('category');
 
         if($category) {
-            $products = Product::where('category_id', $category)->paginate(20);
+            $products = Product::where('category_id', $category)->where('stock', '>', 0)->paginate(10);
         } else {
-            $products = Product::paginate(20);
+            $products = Product::where('stock', '>', 0)->paginate(10);
         }
 
         $categories = Category::all();
