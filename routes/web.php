@@ -4,8 +4,11 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TestController;    
+use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;   
 
@@ -22,6 +25,12 @@ Route::middleware(['auth', 'checkRole:user'])->group(function () {
 
     Route::get("home", [UserController::class, 'home'])->name('home')->middleware('auth');
     Route::get('add-to-cart/{id}', [CartController::class, 'addToCart'])->name('add-to-cart');
+    Route::get('remove-from-cart/{id}', [CartController::class, 'removeFromCart'])->name('remove-to-cart');
+    Route::get('carts', [CartController::class, 'carts'])->name('carts');
+    // Route::get('order', [OrderController::class, 'order'])->name('order');
+    Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+    Route::post('addresses', [UserAddressController::class, 'store']);
+    
 });
 
 Route::get('/register', [AuthController::class, 'register']);

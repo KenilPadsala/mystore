@@ -27,9 +27,9 @@ class Product extends Model
         return $this->image ? asset('storage/' . $this->image) : null;
     }
 
-    public function getPriceAttribute($value)
+    public function getGoodPriceAttribute()
     {
-        return number_format($value, 0);
+        return number_format($this->price, 0);
     }
 
     public function getInStockAttribute()
