@@ -18,6 +18,14 @@
                     </tr>
                 </thead>
                 <tbody>
+
+                    @if($carts->isEmpty())
+                        <tr>
+                            <td colspan="4" class="text-center">No items in the cart</td>
+                        </tr>
+
+                    @else
+
                     @foreach ($carts as $item)
                         <tr>
                             <td> <img width="60" class="rounded" src="{{ $item->product->image_url }}" alt="">
@@ -55,6 +63,7 @@
                         <td> </td>
                         <td> <a href="{{ route('checkout') }}" class="btn btn-primary">Checkout</a> </td>
                     </tr>
+                    @endif
                 </tbody>
             </table>
         </div>

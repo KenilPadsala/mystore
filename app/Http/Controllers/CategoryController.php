@@ -23,7 +23,7 @@ class CategoryController extends Controller
             ]);
         }
 
-        return view('categories.list', ["categories" => $categories]);
+        return view('admin.categories.list', ["categories" => $categories]);
     }
 
     /**
@@ -39,7 +39,7 @@ class CategoryController extends Controller
             ]);
         }
 
-        return view('categories.create');
+        return view('admin.categories.create');
     }
 
     /**
@@ -131,7 +131,7 @@ class CategoryController extends Controller
             ]);
         }
 
-        return view('categories.edit', ['category' => $category]);
+        return view('admin.categories.edit', ['category' => $category]);
     }
 
     /**

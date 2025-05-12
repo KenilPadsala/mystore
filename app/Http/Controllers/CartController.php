@@ -34,29 +34,23 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Product added to cart successfully');
     }
 
-    public function removeFromCart(Request $request, $id)
+    public function removeFromCart($id)
     {
-        $userId = auth()->user()->id;
-
-        // Check if the product exists in the user's cart
-        $cartItem = UserCart::where('user_id', $userId)
-            ->where('product_id', $id)
-            ->first();
+        $cartItem = auth()->user()->carts()->where('product_id', $id)->first();
 
         if ($cartItem) {
-            // If quantity is greater than 1, decrement it
             if ($cartItem->quantity > 1) {
-                $cartItem->quantity -= 1;
-                $cartItem->save();
+                $cartItem->decrement('quantity');
             } else {
-                // If quantity is 1 or less, remove the item from cart
                 $cartItem->delete();
             }
-
-            return redirect()->back()->with('success', 'Product removed from cart successfully');
         }
 
-        return redirect()->back()->with('error', 'Product not found in cart');
+        if (auth()->user()->carts->isEmpty()) {
+            return redirect()->back()->with('success', 'Your cart is now empty. Please add items to continue shopping.');
+        }
+
+        return redirect()->back()->with('success', 'Item removed from the cart.');
     }
 
     function getCart()
@@ -74,13 +68,15 @@ class CartController extends Controller
 
     }
 
-    function carts()
+    public function carts()
     {
         $carts = auth()->user()->carts()->with('product')->get();
+
         $total_price = 0;
         foreach ($carts as $cart) {
             $total_price += $cart->product->price * $cart->quantity;
         }
+
         return view('carts', compact('carts', 'total_price'));
     }
 }

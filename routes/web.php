@@ -18,6 +18,7 @@ Route::get('/test', TestController::class);
 Route::prefix('admin')->middleware(['auth', 'checkRole:admin'])->group(function () {
     Route::resource('products', ProductController::class); //resource
     Route::resource('categories', CategoryController::class); //resource
+    Route::get('orders', [OrderController::class, 'orders'])->name('orders');
     Route::get('dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 });
 
@@ -27,10 +28,12 @@ Route::middleware(['auth', 'checkRole:user'])->group(function () {
     Route::get('add-to-cart/{id}', [CartController::class, 'addToCart'])->name('add-to-cart');
     Route::get('remove-from-cart/{id}', [CartController::class, 'removeFromCart'])->name('remove-to-cart');
     Route::get('carts', [CartController::class, 'carts'])->name('carts');
-    // Route::get('order', [OrderController::class, 'order'])->name('order');
     Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+    Route::post('/new-order', [OrderController::class, 'newOrder'])->name('new-order');
     Route::post('addresses', [UserAddressController::class, 'store']);
-    
+    Route::get('remove-address/{id}', action: [UserAddressController::class, 'remove'])->name('remove-address');
+    Route::get('order', [OrderController::class, 'order'])->name('order');
+    Route::get('my-orders', [OrderController::class, 'myOrders'])->name('my-orders');
 });
 
 Route::get('/register', [AuthController::class, 'register']);

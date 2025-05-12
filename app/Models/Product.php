@@ -41,9 +41,14 @@ class Product extends Model
     // {
     //     $this->attributes['stock'] = $value +100;
     // }
-    
+
     public function setNameAttribute($value)
     {
         $this->attributes['name'] = ucfirst($value);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

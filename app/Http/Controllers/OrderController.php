@@ -8,77 +8,81 @@ use App\Models\Order;
 use App\Models\UserCart;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Models\OrderItem;
+use App\Models\UserAddress;
 
 class OrderController extends Controller
 {
-    // List all orders for the authenticated user
-    public function index()
-    {
-        $orders = Order::where('user_id', auth()->id())->with('items')->latest()->get();
-        return view('orders.index', compact('orders'));
-    }
-
-    // Place an order from user's cart
-    public function store(Request $request)
+    function newOrder(Request $request)
     {
         $user = auth()->user();
-        $cartItems = UserCart::where('user_id', $user->id)->get();
 
-        if ($cartItems->isEmpty()) {
-            return redirect()->back()->with('error', 'Your cart is empty.');
-        }
-
-        DB::beginTransaction();
-
-        try {
-            $total = 0;
-
-            // Calculate total amount
-            foreach ($cartItems as $item) {
-                $total += $item->product->price * $item->quantity;
-            }
-
-            // Create Order
-            $order = Order::create([
-                'user_id' => $user->id,
-                'order_number' => strtoupper(Str::random(10)),
-                'status' => 'pending',
-                'total_amount' => $total,
-                'shipping_address' => $request->input('shipping_address'),
-                'payment_status' => 'pending',
-                'payment_method' => $request->input('payment_method', 'cash'),
-                'placed_at' => now(),
+        // Check if a new address is being added
+        if ($request->filled('full_name') && $request->filled('address1')) {
+            // Validate the new address fields
+            $validatedAddress = $request->validate([
+                'full_name' => 'required|string|max:255',
+                'address1' => 'required|string|max:255',
+                'address2' => 'nullable|string|max:255',
+                'area' => 'required|string|max:255',
+                'pincode' => 'required|digits:6',
+                'landmark' => 'nullable|string|max:255',
+                'city' => 'required|string|max:255',
+                'state' => 'required|string|max:255',
+                'mobile_no' => 'required|string|max:15',
             ]);
 
-            // Create Order Items
-            foreach ($cartItems as $item) {
-                Order_List::create([
-                    'order_id' => $order->id,
-                    'product_id' => $item->product_id,
-                    'product_name' => $item->product->name,
-                    'quantity' => $item->quantity,
-                    'price' => $item->product->price,
-                    'total' => $item->product->price * $item->quantity,
-                ]);
-            }
+            // Create a new address
+            $newAddress = UserAddress::create(array_merge($validatedAddress, [
+                'user_id' => $user->id,
+            ]));
 
-            // Clear user's cart
-            UserCart::where('user_id', $user->id)->delete();
+            $addressId = $newAddress->id;
+        } else {
+            // Validate the selected address
+            $request->validate([
+                'address' => 'required|exists:user_addresses,id',
+            ]);
 
-            DB::commit();
-
-            return redirect()->route('orders.index')->with('success', 'Order placed successfully.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'Failed to place order: ' . $e->getMessage());
+            $addressId = $request->address;
         }
+
+        // Calculate the total price
+        $total_price = $user->carts->sum(function ($cart) {
+            return $cart->product->price * $cart->quantity;
+        });
+
+        // Create the order
+        $order = Order::create([
+            'user_id' => $user->id,
+            'address_id' => $addressId,
+            'total_amount' => $total_price,
+        ]);
+
+        // Create order items
+        foreach ($user->carts as $cart) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $cart->product_id,
+                'quantity' => $cart->quantity,
+                'price' => $cart->product->price,
+            ]);
+        }
+
+        // Clear the user's cart
+        UserCart::where('user_id', $user->id)->delete();
+
+        return redirect()->route('my-orders')->with('success', 'Order placed successfully!');
     }
 
-    // View a single order
-    public function show($id)
+    public function myOrders()
     {
-        $order = Order::with('items')->where('id', $id)->where('user_id', auth()->id())->firstOrFail();
-        return view('orders.show', compact('order'));
+        $user = auth()->user();
+        $orders = $user->orders()->orderByDesc('id')->with('items.product')->paginate(20);
+
+        // dd($orders);
+
+        return view('orders', compact('orders'));
+        
     }
 }

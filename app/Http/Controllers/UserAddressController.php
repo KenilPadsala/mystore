@@ -26,6 +26,24 @@ class UserAddressController extends Controller
         $address->user_id = auth()->id(); // Assuming you have user authentication
         $address->save();
 
-        return redirect()->back()->with('success', 'Address added successfully!');
+        // return redirect()->back()->with('success', 'Address added successfully!');
+        return redirect('/order')->with('success', 'Address saved and order placed successfully.');
+    }
+
+    public function remove($id)
+    {
+        // Find the address by ID
+        $address = UserAddress::findOrFail($id);
+
+        // Check if the address belongs to the authenticated user
+        if ($address->user_id !== auth()->id()) {
+            return redirect()->route('checkout')->with('error', 'You are not authorized to remove this address.');
+        }
+
+        // Delete the address
+        $address->delete();
+
+        // Redirect back to the checkout page with a success message
+        return redirect()->route('checkout')->with('success', 'Address removed successfully.');
     }
 }

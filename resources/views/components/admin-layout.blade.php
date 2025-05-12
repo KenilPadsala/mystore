@@ -69,6 +69,12 @@
                     <span>Category</span></a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('admin.orders')}}">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Orders</span></a>
+            </li>
+
             <!-- Nav Item - Utilities Collapse Menu -->
             <!-- <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
