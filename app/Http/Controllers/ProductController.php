@@ -27,7 +27,7 @@ class ProductController extends Controller
             ]);
         }
 
-        return view('products.list', [
+        return view('admin.products.list', [
             "products" => $products,
             'total' => $total,
             'page' => $request->page ?? 1

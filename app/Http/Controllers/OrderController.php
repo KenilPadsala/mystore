@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order_List;
+use App\Notifications\OrderNotification;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\UserCart;
@@ -69,9 +70,11 @@ class OrderController extends Controller
             ]);
         }
 
+        // $user->notify(OrderNotification::class);
+
         // Clear the user's cart
         UserCart::where('user_id', $user->id)->delete();
-
+        $user->notify(new OrderNotification($order));
         return redirect()->route('my-orders')->with('success', 'Order placed successfully!');
     }
 
@@ -83,6 +86,15 @@ class OrderController extends Controller
         // dd($orders);
 
         return view('orders', compact('orders'));
-        
+
     }
+
+    public function orders()
+    {
+        $orders = Order::paginate(10);
+        return view('admin.orders', compact('orders'));
+    }
+
+
+
 }
