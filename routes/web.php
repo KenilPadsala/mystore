@@ -11,6 +11,8 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;   
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 Route::get('/', [UserController::class, 'home'])->name('home');
 Route::get('/test', TestController::class);
@@ -36,6 +38,19 @@ Route::middleware(['auth', 'checkRole:user'])->group(function () {
     Route::get('order', [OrderController::class, 'order'])->name('order');
     Route::get('my-orders', [OrderController::class, 'myOrders'])->name('my-orders');
 });
+
+
+
+// Forgot password form
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+// Send reset email
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+// Reset password form
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+// Update password
+Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+
 
 Route::get('/register', [AuthController::class, 'register']);
 Route::get('/login', [AuthController::class, 'login']);
