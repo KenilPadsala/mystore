@@ -49,7 +49,7 @@ class ProductController extends Controller
             ]);
         }
 
-        return view('products.create', ['categories' => $categories]);
+        return view('admin.products.create', ['categories' => $categories]);
     }
 
     /**
@@ -155,7 +155,7 @@ class ProductController extends Controller
             ]);
         }
 
-        return view('products.edit', ['product' => $product]);
+        return view('admin.products.edit', ['product' => $product]);
     }
 
     /**
