@@ -31,7 +31,7 @@ class CartController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Product added to cart successfully');
+        return redirect()->back()->with('success', value: 'Product added to cart successfully');
     }
 
     public function removeFromCart($id)
